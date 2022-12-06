@@ -1,0 +1,53 @@
+schemaVersion: 2.1.0
+metadata:
+  name: bash
+  namespace: xtilam-dev
+attributes:
+  controller.devfile.io/storage-type: common
+projects:
+  - name: bash
+    zip:
+      location: 'https://eclipse-che.github.io/che-devfile-registry/7.52.0/resources/v2/bash.zip'
+components:
+  - attributes:
+      app.kubernetes.io/name: tools
+      che-theia.eclipse.org/vscode-extensions:
+        - 'https://github.com/redhat-developer/codeready-workspaces-vscode-extensions/releases/download/vf707df2/shellcheck-v0.13.2.vsix'
+      che-theia.eclipse.org/vscode-preferences:
+        shellcheck.executablePath: /bin/shellcheck
+    container:
+      args:
+        - sh
+        - '-c'
+        - '${PLUGIN_REMOTE_ENDPOINT_EXECUTABLE}'
+      env:
+        - name: PLUGIN_REMOTE_ENDPOINT_EXECUTABLE
+          value: /remote-endpoint/plugin-remote-endpoint
+        - name: THEIA_PLUGINS
+          value: 'local-dir:///plugins/sidecars/tools'
+        - name: CHE_DASHBOARD_URL
+          value: 'https://devspaces.apps.sandbox-m2.ll9k.p1.openshiftapps.com'
+        - name: CHE_PLUGIN_REGISTRY_URL
+          value: 'https://devspaces.apps.sandbox-m2.ll9k.p1.openshiftapps.com/plugin-registry/v3'
+        - name: CHE_PLUGIN_REGISTRY_INTERNAL_URL
+          value: 'http://plugin-registry.crw.svc:8080/v3'
+      image: 'quay.io/devfile/universal-developer-image:ubi8-0e189d9'
+      memoryLimit: 3Gi
+      sourceMapping: /projects
+      volumeMounts:
+        - name: remote-endpoint
+          path: /remote-endpoint
+        - name: plugins
+          path: /plugins
+    name: tools
+commands:
+  - exec:
+      commandLine: |
+        ./main.sh
+      component: tools
+      group:
+        isDefault: true
+        kind: run
+      label: Run main.sh script
+      workingDir: '${PROJECT_SOURCE}'
+    id: run-main-script
