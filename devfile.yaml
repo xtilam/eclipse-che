@@ -6,6 +6,7 @@ components:
   - attributes:
       che-theia.eclipse.org/vscode-extensions:
         - "https://github.com/redhat-developer/codeready-workspaces-vscode-extensions/releases/download/vf707df2/shellcheck-v0.13.2.vsix"
+        - "https://open-vsx.org/api/zobo/php-intellisense/1.0.11/file/zobo.php-intellisense-1.0.11.vsix"
     container:
       image: "quay.io/devfile/universal-developer-image:ubi8-0e189d9"
       memoryLimit: 3Gi
